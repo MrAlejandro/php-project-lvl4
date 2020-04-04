@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app:cached
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - HEROKU_API_KEY=${HEROKU_API_KEY}
+      - DB_DATABASE=/app/database/development.sqlite
+      - DB_CONNECTION=sqlite
+      - QUEUE_CONNECTION=database
+    command: bash -c "composer install --dev && nohup php artisan queue:work --daemon & php artisan serve --host 0.0.0.0 --port 8000"
+    # command: bash -c "composer install --dev && php artisan migrate && nohup php artisan queue:work --daemon & php artisan serve --host 0.0.0.0 --port 8000"
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:11.4-alpine
+    logging:
+      driver: none
+    ports:
+      - 5432:5432
