@@ -1,4 +1,4 @@
-name: Page Analyzer
+name: Task Manager
 
 on:
   push:
