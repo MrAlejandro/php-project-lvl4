@@ -17,3 +17,41 @@
       [2m+35 vendor frames [22m
   36  artisan:37
       Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+   Illuminate\Database\QueryException 
+
+  Database (/app/database/development.sqlite) does not exist. (SQL: PRAGMA foreign_keys = ON;)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:670
+    666|         // If an exception occurs when attempting to run a query, we'll format the error
+    667|         // message to include the bindings with SQL, which will make this exception a
+    668|         // lot more helpful to the developer instead of just the database's errors.
+    669|         catch (Exception $e) {
+  > 670|             throw new QueryException(
+    671|                 $query, $this->prepareBindings($bindings), $e
+    672|             );
+    673|         }
+    674|
+
+      [2m+35 vendor frames [22m
+  36  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+   Illuminate\Database\QueryException 
+
+  Database (/app/database/development.sqlite) does not exist. (SQL: PRAGMA foreign_keys = ON;)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:670
+    666|         // If an exception occurs when attempting to run a query, we'll format the error
+    667|         // message to include the bindings with SQL, which will make this exception a
+    668|         // lot more helpful to the developer instead of just the database's errors.
+    669|         catch (Exception $e) {
+  > 670|             throw new QueryException(
+    671|                 $query, $this->prepareBindings($bindings), $e
+    672|             );
+    673|         }
+    674|
+
+      [2m+35 vendor frames [22m
+  36  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))

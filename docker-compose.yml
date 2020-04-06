@@ -19,6 +19,16 @@ services:
     stdin_open: true
     tty: true
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
+    volumes:
+      - .:/app:cached
+    depends_on:
+      - app
+    command: sh -c "npm install && npm run dev"
+
   db:
     image: postgres:11.4-alpine
     logging:
