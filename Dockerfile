@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
       libzip-dev \
       sqlite3 \
       git \
-      && docker-php-ext-install zip
+      libpq-dev \
+      && docker-php-ext-install zip pdo pdo_pgsql
 
 RUN curl https://cli-assets.heroku.com/install.sh | sh
 
