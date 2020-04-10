@@ -62,7 +62,7 @@ class TaskStatusController extends Controller
         Gate::authorize('manage-taskStatus');
 
         $taskStatus->delete();
-        flash(__('flash.task_status.update.destroy'));
+        flash(__('flash.task_status.delete.success'));
 
         return redirect()->route('task_statuses.index');
     }

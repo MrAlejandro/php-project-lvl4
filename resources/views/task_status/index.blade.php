@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{$taskStatus->id}}</td>
                     <td>{{$taskStatus->name}}</td>
-                    <td>{{App\Helpers\DateHelper::format($taskStatus->created_at)}}</td>
+                    <td>{{App\Helpers\DateHelper::format($taskStatus->created_at ?? '')}}</td>
                     @auth
                     <td>
                         <a href="{{ route('task_statuses.destroy', $taskStatus) }}" data-confirm="{{ __('view.task_status.index.confirm_remove') }}" data-method="delete">

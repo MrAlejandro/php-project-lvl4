@@ -3,7 +3,8 @@
 @section('content')
     <h1 class="mb-5">{{ __('view.task_status.edit.edit_new_task') }}</h1>
 
-    <form method="PUT" action="{{ route('task_statuses.update', $taskStatus) }}" accept-charset="UTF-8" class="w-50">
+    <form method="POST" action="{{ route('task_statuses.update', $taskStatus) }}" accept-charset="UTF-8" class="w-50">
+        <input type="hidden" name="_method" value="PUT"/>
         @csrf
 
         <div class="form-group">
