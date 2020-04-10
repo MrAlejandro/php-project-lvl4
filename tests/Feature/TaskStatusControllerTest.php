@@ -5,10 +5,19 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\TaskStatus;
+use App\User;
 
 class ArticleControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->user = factory(User::class)->create();
+    }
 
     public function testIndex()
     {
@@ -17,16 +26,9 @@ class ArticleControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testShow()
-    {
-        $taksStatus = factory(TaskStatus::class)->create();
-        $response = $this->get(route('task_statuses.show', $taksStatus));
-        $response->assertStatus(200);
-    }
-
     public function testCreate()
     {
-        $response = $this->withoutExceptionHandling()->get(route('task_statuses.create'));
+        $response = $this->actingAs($this->user)->get(route('task_statuses.create'));
         $response->assertStatus(200);
     }
 
@@ -34,7 +36,7 @@ class ArticleControllerTest extends TestCase
     {
         $factoryData = factory(TaskStatus::class)->make()->toArray();
         $data = \Arr::only($factoryData, ['name']);
-        $response = $this->post(route('task_statuses.store'), $data);
+        $response = $this->actingAs($this->user)->post(route('task_statuses.store'), $data);
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
 
@@ -44,7 +46,7 @@ class ArticleControllerTest extends TestCase
     public function testEdit()
     {
         $taskStatus = factory(TaskStatus::class)->create();
-        $response = $this->get(route('task_statuses.edit', $taskStatus));
+        $response = $this->actingAs($this->user)->get(route('task_statuses.edit', $taskStatus));
         $response->assertStatus(200);
     }
 
@@ -52,7 +54,7 @@ class ArticleControllerTest extends TestCase
     {
         $taskStatus = factory(TaskStatus::class)->create();
         $data = ['name' => 'in_qa'];
-        $response = $this->patch(route('task_statuses.update', $taskStatus), $data);
+        $response = $this->actingAs($this->user)->patch(route('task_statuses.update', $taskStatus), $data);
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
 
@@ -62,7 +64,7 @@ class ArticleControllerTest extends TestCase
     public function testDestroy()
     {
         $taskStatus = factory(TaskStatus::class)->create();
-        $response = $this->delete(route('task_statuses.destroy', $taskStatus));
+        $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $taskStatus));
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
 
