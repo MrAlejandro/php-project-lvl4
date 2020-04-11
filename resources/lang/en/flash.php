@@ -12,4 +12,15 @@ return [
             'success' => 'Task Status removed successfully',
         ],
     ],
+    'task' => [
+        'store' => [
+            'success' => 'Task created successfully',
+        ],
+        'update' => [
+            'success' => 'Task updated successfully',
+        ],
+        'delete' => [
+            'success' => 'Task removed successfully',
+        ],
+    ],
 ];

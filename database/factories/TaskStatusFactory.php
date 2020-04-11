@@ -5,6 +5,6 @@ use Faker\Generator as Faker;
 
 $factory->define(TaskStatus::class, function (Faker $faker) {
     return [
-        'name' => 'new',
+        'name' => $faker->word,
     ];
 });

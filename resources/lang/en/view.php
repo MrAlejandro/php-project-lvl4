@@ -1,6 +1,41 @@
 <?php
 
 return [
+    'task' => [
+        'index' => [
+            'id' => 'Id',
+            'tasks' => 'Tasks',
+            'status' => 'Status',
+            'author' => 'Author',
+            'assignee' => 'Assignee',
+            'apply' => 'Apply',
+            'name' => 'Name',
+            'created_at' => 'Created At',
+            'add_new' => 'Add New',
+            'actions' => 'Actions',
+            'confirm_remove' => 'Are you sure?',
+            'remove' => 'Remove',
+            'edit' => 'Edit',
+        ],
+        'show' => [
+            'name' => 'Name',
+            'description' => 'Description',
+        ],
+        'edit' => [
+            'edit_task' => 'Edit Task',
+            'update' => 'Update',
+        ],
+        'create' => [
+            'add_new_task' => 'Add New Task',
+            'create' => 'Create',
+        ],
+        'form' => [
+            'assignee' => 'Assignee',
+            'name' => 'Name',
+            'status' => 'Status',
+            'description' => 'Description',
+        ],
+    ],
     'task_status' => [
         'index' => [
             'task_statuses' => 'Task Statuses',

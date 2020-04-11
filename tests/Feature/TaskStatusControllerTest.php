@@ -7,7 +7,7 @@ use Tests\TestCase;
 use App\TaskStatus;
 use App\User;
 
-class ArticleControllerTest extends TestCase
+class TaskStatusControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -34,8 +34,8 @@ class ArticleControllerTest extends TestCase
 
     public function testStore()
     {
-        $factoryData = factory(TaskStatus::class)->make()->toArray();
-        $data = \Arr::only($factoryData, ['name']);
+        $taskStatusData = factory(TaskStatus::class)->make()->toArray();
+        $data = \Arr::only($taskStatusData, ['name']);
         $response = $this->actingAs($this->user)->post(route('task_statuses.store'), $data);
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
@@ -53,7 +53,8 @@ class ArticleControllerTest extends TestCase
     public function testUpdate()
     {
         $taskStatus = factory(TaskStatus::class)->create();
-        $data = ['name' => 'in_qa'];
+        $taskStatusData = factory(TaskStatus::class)->make()->toArray();
+        $data = \Arr::only($taskStatusData, ['name']);
         $response = $this->actingAs($this->user)->patch(route('task_statuses.update', $taskStatus), $data);
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
