@@ -23,4 +23,15 @@ return [
             'success' => 'Task removed successfully',
         ],
     ],
+    'label' => [
+        'store' => [
+            'success' => 'Label created successfully',
+        ],
+        'update' => [
+            'success' => 'Label updated successfully',
+        ],
+        'delete' => [
+            'success' => 'Label removed successfully',
+        ],
+    ],
 ];

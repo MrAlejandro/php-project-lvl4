@@ -26,6 +26,7 @@
             <tr>
                 <th>{{ __('view.task.index.id') }}</th>
                 <th>{{ __('view.task.index.status') }}</th>
+                <th>{{ __('view.task.index.labels') }}</th>
                 <th>{{ __('view.task.index.name') }}</th>
                 <th>{{ __('view.task.index.author') }}</th>
                 <th>{{ __('view.task.index.assignee') }}</th>
@@ -40,16 +41,25 @@
                 <tr>
                     <td>{{$task->id}}</td>
                     <td>{{$task->status->name}}</td>
+                    <td>
+                        @if($task->labels)
+                            @foreach($task->labels as $label)
+                                <span class="badge badge-secondary">{{ $label->name }}</span>
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td><a href="{{ route('tasks.show', $task) }}">{{$task->name}}</a></td>
                     <td>{{$task->author->name}}</td>
-                    <td>{{$task->assignee ? $task->assignee->name : '-'}}</td>
+                    <td>{{optional($task->assignee)->name ?? '-'}}</td>
                     <td>{{App\Helpers\DateHelper::format($task->created_at)}}</td>
                     @auth
                     <td>
                         <a href="{{ route('tasks.edit', $task) }}">
                             {{ __('view.task.index.edit') }}
                         </a>
-                        @if($task->author->id === Auth::id())
+                        @if(Auth::user()->can('destroy', $task))
                         <a href="{{ route('tasks.destroy', $task) }}" data-confirm="{{ __('view.task.index.confirm_remove') }}" data-method="delete">
                             {{ __('view.task.index.remove') }}
                         </a>

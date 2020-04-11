@@ -38,6 +38,9 @@
                             <a class="nav-link" href="{{ route('tasks.index') }}">{{ __('menu.tasks') }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('labels.index') }}">{{ __('menu.labels') }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('task_statuses.index') }}">{{ __('menu.task_statuses') }}</a>
                         </li>
                     </ul>

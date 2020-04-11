@@ -6,6 +6,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $this->call(TaskStatusSeeder::class);
+        $this->call([
+            TaskStatusSeeder::class,
+            LabelSeeder::class,
+        ]);
     }
 }

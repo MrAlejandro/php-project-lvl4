@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Task;
 use App\TaskStatus;
+use App\Label;
 
 class TaskController extends Controller
 {
@@ -27,9 +28,10 @@ class TaskController extends Controller
 
         $task = new Task();
         $users = User::all();
+        $labels = Label::all();
         $taskStatuses = TaskStatus::all();
 
-        return view('task.create', compact('task', 'users', 'taskStatuses'));
+        return view('task.create', compact('task', 'users', 'labels', 'taskStatuses'));
     }
 
     public function store(Request $request)
@@ -43,7 +45,8 @@ class TaskController extends Controller
             'assigned_to_id' => 'integer|nullable',
         ]);
 
-        $request->user()->createdTasks()->create($data);
+        $task = $request->user()->createdTasks()->create($data);
+        $task->labels()->sync($request->label_ids ?? []);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
@@ -53,11 +56,12 @@ class TaskController extends Controller
     {
         Gate::authorize('authenticated-user');
 
-        $task->load(['assignee', 'status']);
+        $task->load(['assignee', 'status', 'labels']);
         $users = User::all();
+        $labels = Label::all();
         $taskStatuses = TaskStatus::all();
 
-        return view('task.edit', compact('task', 'users', 'taskStatuses'));
+        return view('task.edit', compact('task', 'users', 'labels', 'taskStatuses'));
     }
 
     public function update(Request $request, Task $task)
@@ -72,6 +76,7 @@ class TaskController extends Controller
         ]);
 
         $task->update($data);
+        $task->labels()->sync($request->label_ids ?? []);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');

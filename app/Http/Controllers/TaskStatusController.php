@@ -48,7 +48,7 @@ class TaskStatusController extends Controller
         Gate::authorize('authenticated-user');
 
         $data = $this->validate($request, [
-            'name' => 'required|unique:task_statuses,name',
+            'name' => 'required|unique:task_statuses,name,' . $taskStatus->id,
         ]);
 
         $taskStatus->update($data);

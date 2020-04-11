@@ -1,11 +1,11 @@
 <?php
 
-use App\TaskStatus;
+use App\Label;
 use Faker\Generator as Faker;
 
-$factory->define(TaskStatus::class, function (Faker $faker) {
+$factory->define(Label::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
+        'name' => $faker->sentence,
         'created_at' => now(),
         'updated_at' => now(),
     ];

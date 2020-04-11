@@ -12,5 +12,7 @@ $factory->define(Task::class, function (Faker $faker) {
         'status_id' => factory(TaskStatus::class),
         'created_by_id' => factory(User::class),
         'assigned_to_id' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
     ];
 });

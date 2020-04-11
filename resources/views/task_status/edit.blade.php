@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-5">{{ __('view.task_status.edit.edit_new_task') }}</h1>
+    <h1 class="mb-5">{{ __('view.task_status.edit.edit_task_status') }}</h1>
 
     @include('shared.errors')
 

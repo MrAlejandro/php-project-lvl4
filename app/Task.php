@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\TaskStatus;
+use App\Label;
 use App\User;
 
 class Task extends Model
@@ -23,5 +24,10 @@ class Task extends Model
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assigned_to_id');
+    }
+
+    public function labels()
+    {
+        return $this->belongsToMany(Label::class, 'task_label');
     }
 }

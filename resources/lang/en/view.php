@@ -16,10 +16,12 @@ return [
             'confirm_remove' => 'Are you sure?',
             'remove' => 'Remove',
             'edit' => 'Edit',
+            'labels' => 'Labels',
         ],
         'show' => [
             'name' => 'Name',
             'description' => 'Description',
+            'labels' => 'Labels',
         ],
         'edit' => [
             'edit_task' => 'Edit Task',
@@ -33,6 +35,7 @@ return [
             'assignee' => 'Assignee',
             'name' => 'Name',
             'status' => 'Status',
+            'labels' => 'Labels',
             'description' => 'Description',
         ],
     ],
@@ -49,12 +52,35 @@ return [
             'edit' => 'Edit',
         ],
         'create' => [
-            'create_new_task' => 'Add New Task Status',
+            'create_new_task_status' => 'Add New Task Status',
             'create' => 'Create',
             'name' => 'Name',
         ],
         'edit' => [
-            'edit_new_task' => 'Edit Task Status',
+            'edit_task_status' => 'Edit Task Status',
+            'update' => 'Update',
+            'name' => 'Name',
+        ],
+    ],
+    'label' => [
+        'index' => [
+            'labels' => 'Labels',
+            'add_new' => 'Add New',
+            'confirm_remove' => 'Are you sre?',
+            'id' => 'Id',
+            'name' => 'Name',
+            'created_at' => 'Created At',
+            'actions' => 'Actions',
+            'remove' => 'Remove',
+            'edit' => 'Edit',
+        ],
+        'create' => [
+            'create_new_label' => 'Add New Label',
+            'create' => 'Create',
+            'name' => 'Name',
+        ],
+        'edit' => [
+            'edit_label' => 'Edit Label',
             'update' => 'Update',
             'name' => 'Name',
         ],

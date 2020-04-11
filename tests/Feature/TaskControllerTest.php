@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Task;
 use App\TaskStatus;
 use App\User;
+use App\Label;
 
 class TaskControllerTest extends TestCase
 {
@@ -49,17 +50,21 @@ class TaskControllerTest extends TestCase
     {
         $taskData = factory(Task::class)->make()->toArray();
         $taskStatus = factory(TaskStatus::class)->create();
+        $labels = factory(Label::class, 2)->create();
         $assignee = factory(User::class)->create();
-        $data = collect($taskData)->only(['name', 'description'])
-                                  ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id])
-                                  ->toArray();
+        $taskAttrs = collect($taskData)->only(['name', 'description'])
+                                  ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id]);
 
-        $response = $this->actingAs($this->user)->post(route('tasks.store'), $data);
+        $params = $taskAttrs->merge(['label_ids' => $labels->pluck('id')])->toArray();
+
+        $response = $this->actingAs($this->user)->post(route('tasks.store'), $params);
         $response->assertStatus(302);
 
-        $data['created_by_id'] = $this->user->id;
+        $taskAttrs['created_by_id'] = $this->user->id;
 
-        $this->assertDatabaseHas('tasks', $data);
+        $this->assertDatabaseHas('tasks', $taskAttrs->toArray());
+        $this->assertDatabaseHas('task_label', ['label_id' => $labels->first()->id]);
+        $this->assertDatabaseHas('task_label', ['label_id' => $labels->last()->id]);
     }
 
     public function testStoreFailsForNonAuthenticatedUser()
@@ -84,15 +89,20 @@ class TaskControllerTest extends TestCase
     {
         $taskData = factory(Task::class)->make()->toArray();
         $taskStatus = factory(TaskStatus::class)->create();
+        $labels = factory(Label::class, 2)->create();
         $assignee = factory(User::class)->create();
-        $data = collect($taskData)->only(['name', 'description'])
-                                  ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id])
-                                  ->toArray();
+        $taskAttrs = collect($taskData)->only(['name', 'description'])
+                                  ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id]);
 
-        $response = $this->actingAs($this->user)->patch(route('tasks.update', $this->tasks->first()), $data);
+        $params = $taskAttrs->merge(['label_ids' => $labels->pluck('id')])->toArray();
+        $task = $this->tasks->first();
+
+        $response = $this->actingAs($this->user)->patch(route('tasks.update', $task->id), $params);
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('tasks', $data);
+        $this->assertDatabaseHas('tasks', $taskAttrs->toArray());
+        $this->assertDatabaseHas('task_label', ['task_id' => $task->id, 'label_id' => $labels->first()->id]);
+        $this->assertDatabaseHas('task_label', ['task_id' => $task->id, 'label_id' => $labels->last()->id]);
     }
 
     public function testUpdateFailsForNotAuthenticatedUser()
