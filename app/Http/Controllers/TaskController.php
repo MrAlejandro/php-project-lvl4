@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-/* use Illuminate\Support\Facades\Gate; */
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\User;
 use App\Task;
@@ -23,6 +23,8 @@ class TaskController extends Controller
 
     public function create()
     {
+        Gate::authorize('authenticated-user');
+
         $task = new Task();
         $users = User::all();
         $taskStatuses = TaskStatus::all();
@@ -32,14 +34,16 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('authenticated-user');
+
         $data = $this->validate($request, [
-            'name' => 'string|required',
+            'name' => 'required',
             'description' => 'string|nullable',
-            'status_id' => 'integer|required',
+            'status_id' => 'required',
             'assigned_to_id' => 'integer|nullable',
         ]);
 
-        $this->user->createdTasks()->create($data);
+        $request->user()->createdTasks()->create($data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
@@ -47,6 +51,8 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
+        Gate::authorize('authenticated-user');
+
         $task->load(['assignee', 'status']);
         $users = User::all();
         $taskStatuses = TaskStatus::all();
@@ -56,15 +62,27 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
+        Gate::authorize('authenticated-user');
+
         $data = $this->validate($request, [
-            'name' => 'string|required',
+            'name' => 'required',
             'description' => 'string|nullable',
-            'status_id' => 'integer|required',
+            'status_id' => 'required',
             'assigned_to_id' => 'integer|nullable',
         ]);
 
         $task->update($data);
         flash(__('flash.task.update.success'))->success();
+
+        return redirect()->route('tasks.index');
+    }
+
+    public function destroy(Task $task)
+    {
+        $this->authorize('destroy', $task);
+
+        $task->delete();
+        flash(__('flash.task.delete.success'));
 
         return redirect()->route('tasks.index');
     }

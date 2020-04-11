@@ -16,7 +16,7 @@ class TaskStatusController extends Controller
 
     public function create()
     {
-        Gate::authorize('manage-taskStatus');
+        Gate::authorize('authenticated-user');
 
         $taskStatus = new TaskStatus();
         return view('task_status.create', compact('taskStatus'));
@@ -24,7 +24,7 @@ class TaskStatusController extends Controller
 
     public function store(Request $request)
     {
-        Gate::authorize('manage-taskStatus');
+        Gate::authorize('authenticated-user');
 
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses',
@@ -38,31 +38,35 @@ class TaskStatusController extends Controller
 
     public function edit(TaskStatus $taskStatus)
     {
-        Gate::authorize('manage-taskStatus');
+        Gate::authorize('authenticated-user');
 
         return view('task_status.edit', compact('taskStatus'));
     }
 
     public function update(Request $request, TaskStatus $taskStatus)
     {
-        Gate::authorize('manage-taskStatus');
+        Gate::authorize('authenticated-user');
 
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses,name',
         ]);
 
         $taskStatus->update($data);
-        flash(__('flash.task_status.update.success'));
+        flash(__('flash.task_status.update.success'))->success();
 
         return redirect()->route('task_statuses.index');
     }
 
     public function destroy(TaskStatus $taskStatus)
     {
-        Gate::authorize('manage-taskStatus');
+        $response = Gate::inspect('destroy', $taskStatus);
 
-        $taskStatus->delete();
-        flash(__('flash.task_status.delete.success'));
+        if ($response->allowed()) {
+            $taskStatus->delete();
+            flash(__('flash.task_status.delete.success'))->success();
+        } else {
+            flash($response->message())->error();
+        }
 
         return redirect()->route('task_statuses.index');
     }

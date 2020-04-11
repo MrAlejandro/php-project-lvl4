@@ -12,6 +12,7 @@ class TaskControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $nonOwnerUser;
     protected $user;
     protected $task;
     protected $taskStatus;
@@ -34,8 +35,14 @@ class TaskControllerTest extends TestCase
 
     public function testCreate()
     {
-        $response = $this->get(route('tasks.create'));
+        $response = $this->actingAs($this->user)->get(route('tasks.create'));
         $response->assertStatus(200);
+    }
+
+    public function testCreateFailsForNonAuthenticatedUser()
+    {
+        $response = $this->get(route('tasks.create'));
+        $response->assertStatus(403);
     }
 
     public function testStore()
@@ -55,6 +62,12 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseHas('tasks', $data);
     }
 
+    public function testStoreFailsForNonAuthenticatedUser()
+    {
+        $response = $this->post(route('tasks.store'), []);
+        $response->assertStatus(403);
+    }
+
     public function testShow()
     {
         $response = $this->get(route('tasks.show', $this->tasks->first()));
@@ -63,7 +76,7 @@ class TaskControllerTest extends TestCase
 
     public function testEdit()
     {
-        $response = $this->get(route('tasks.edit', $this->tasks->first()));
+        $response = $this->actingAs($this->user)->get(route('tasks.edit', $this->tasks->first()));
         $response->assertStatus(200);
     }
 
@@ -76,9 +89,36 @@ class TaskControllerTest extends TestCase
                                   ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id])
                                   ->toArray();
 
-        $response = $this->patch(route('tasks.update', $this->tasks->first()), $data);
+        $response = $this->actingAs($this->user)->patch(route('tasks.update', $this->tasks->first()), $data);
         $response->assertStatus(302);
 
         $this->assertDatabaseHas('tasks', $data);
+    }
+
+    public function testUpdateFailsForNotAuthenticatedUser()
+    {
+        $response = $this->patch(route('tasks.update', $this->tasks->first()), []);
+        $response->assertStatus(403);
+    }
+
+
+    public function testDestroy()
+    {
+        $task = $this->tasks->first();
+        $response = $this->actingAs($this->user)->delete(route('tasks.destroy', $task));
+        $response->assertSessionHasNoErrors();
+        $response->assertStatus(302);
+
+        $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
+    }
+
+    public function testDestroyFailsDeletingNotOwnedTask()
+    {
+        $task = $this->tasks->first();
+        $user = factory(User::class)->create();
+        $response = $this->actingAs($user)->delete(route('tasks.destroy', $task));
+        $response->assertStatus(403);
+
+        $this->assertDatabaseHas('tasks', ['id' => $task->id]);
     }
 }

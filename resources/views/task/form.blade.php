@@ -1,6 +1,11 @@
+@include('shared.errors')
+
 <div class="form-group">
     <label for="name">{{ __('view.task.form.name') }}</label>
     <input class="form-control" name="name" type="text" value="{{ $task->name }}" id="name">
+    @if($errors->has('name'))
+        <div class="error">{{ $errors->first('name') }}</div>
+    @endif
 </div>
 
 <div class="form-group">

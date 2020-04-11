@@ -17,9 +17,9 @@
                 <input class="btn btn-outline-primary mr-2" type="submit" value="{{ __('view.task.index.apply') }}">
             </form>
         </div>
-        {{-- @auth --}}
-        {{-- @endauth --}}
+        @auth
         <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">{{ __('view.task.index.add_new') }}</a>
+        @endauth
     </div>
     <table class="table mt-2">
         <thead>
@@ -30,7 +30,9 @@
                 <th>{{ __('view.task.index.author') }}</th>
                 <th>{{ __('view.task.index.assignee') }}</th>
                 <th>{{ __('view.task.index.created_at') }}</th>
+                @auth
                 <th>{{ __('view.task.index.actions') }}</th>
+                @endauth
             </tr>
         </thead>
         <tbody>
@@ -42,16 +44,18 @@
                     <td>{{$task->author->name}}</td>
                     <td>{{$task->assignee ? $task->assignee->name : '-'}}</td>
                     <td>{{App\Helpers\DateHelper::format($task->created_at)}}</td>
-                    {{-- @auth --}}
+                    @auth
                     <td>
-                        <a href="{{ route('tasks.destroy', $task) }}" data-confirm="{{ __('view.task.index.confirm_remove') }}" data-method="delete">
-                            {{ __('view.task.index.remove') }}
-                        </a>
                         <a href="{{ route('tasks.edit', $task) }}">
                             {{ __('view.task.index.edit') }}
                         </a>
+                        @if($task->author->id === Auth::id())
+                        <a href="{{ route('tasks.destroy', $task) }}" data-confirm="{{ __('view.task.index.confirm_remove') }}" data-method="delete">
+                            {{ __('view.task.index.remove') }}
+                        </a>
+                        @endif
                     </td>
-                    {{-- @endauth --}}
+                    @endauth
                 </tr>
             @endforeach
         </tbody>

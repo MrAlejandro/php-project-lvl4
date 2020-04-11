@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\TaskStatus;
+use App\Task;
 use App\User;
 
 class TaskStatusControllerTest extends TestCase
@@ -70,5 +71,14 @@ class TaskStatusControllerTest extends TestCase
         $response->assertStatus(302);
 
         $this->assertDatabaseMissing('task_statuses', ['id' => $taskStatus->id]);
+    }
+
+    public function testDestroyFailsDeletingStatusAssociatedWithTask()
+    {
+        $task = factory(Task::class)->create();
+        $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $task->status));
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('task_statuses', ['id' => $task->status->id]);
     }
 }

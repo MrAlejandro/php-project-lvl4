@@ -3,6 +3,8 @@
 @section('content')
     <h1 class="mb-5">{{ __('view.task_status.edit.edit_new_task') }}</h1>
 
+    @include('shared.errors')
+
     <form method="POST" action="{{ route('task_statuses.update', $taskStatus) }}" accept-charset="UTF-8" class="w-50">
         <input type="hidden" name="_method" value="PUT"/>
         @csrf
