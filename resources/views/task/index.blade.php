@@ -21,7 +21,7 @@
                 <select class="form-control mr-2" name="filter[created_by_id]">
                     <option value="">{{ __('view.task.index.author') }}</option>
                     @foreach($users as $user)
-                        <option {{ optional($filter)['cretated_by_id'] == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
+                        <option {{ optional($filter)['created_by_id'] == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach
                 </select>
                 <select class="form-control mr-2" name="filter[assigned_to_id]">
