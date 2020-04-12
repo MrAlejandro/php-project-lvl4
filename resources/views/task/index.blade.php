@@ -2,6 +2,7 @@
 
 @section('content')
     <h1 class="mb-5">{{ __('view.task.index.tasks') }}</h1>
+    {{ $tasks->withQueryString()->links() }}
     <div class="d-flex">
         <div>
             <form method="GET" action="{{ route('tasks.index') }}" accept-charset="UTF-8" class="form-inline">
@@ -86,4 +87,5 @@
             @endforeach
         </tbody>
     </table>
+    {{ $tasks->withQueryString()->links() }}
 @endsection
