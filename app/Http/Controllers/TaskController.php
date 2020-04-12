@@ -16,9 +16,7 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::all();
-        $labels = Label::all();
-        $taskStatuses = TaskStatus::all();
+        [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
 
         $tasks = QueryBuilder::for(Task::class)
             ->with(['status', 'labels', 'assignee'])
@@ -45,9 +43,7 @@ class TaskController extends Controller
         Gate::authorize('authenticated-user');
 
         $task = new Task();
-        $users = User::all();
-        $labels = Label::all();
-        $taskStatuses = TaskStatus::all();
+        [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
 
         return view('task.create', compact('task', 'users', 'labels', 'taskStatuses'));
     }
@@ -76,9 +72,7 @@ class TaskController extends Controller
         Gate::authorize('authenticated-user');
 
         $task->load(['assignee', 'status', 'labels']);
-        $users = User::all();
-        $labels = Label::all();
-        $taskStatuses = TaskStatus::all();
+        [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
 
         return view('task.edit', compact('task', 'users', 'labels', 'taskStatuses'));
     }
