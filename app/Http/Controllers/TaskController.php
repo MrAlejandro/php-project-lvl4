@@ -20,7 +20,7 @@ class TaskController extends Controller
         $taskStatuses = TaskStatus::all();
 
         $tasks = QueryBuilder::for(Task::class)
-            ->with(['status', 'author', 'assignee'])
+            ->with(['status', 'labels', 'assignee'])
             ->allowedFilters(
                 AllowedFilter::exact('labels.id'),
                 AllowedFilter::exact('status_id'),

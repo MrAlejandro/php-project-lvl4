@@ -36,12 +36,12 @@ class LabelsControllerTest extends TestCase
     public function testStore()
     {
         $labelData = factory(Label::class)->make()->toArray();
-        $data = \Arr::only($labelData, ['name']);
-        $response = $this->actingAs($this->user)->post(route('labels.store'), $data);
+        $labelAttrs = \Arr::only($labelData, ['name']);
+        $response = $this->actingAs($this->user)->post(route('labels.store'), $labelAttrs);
         $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('labels', $data);
+        $this->assertDatabaseHas('labels', $labelAttrs);
     }
 
     public function testEdit()

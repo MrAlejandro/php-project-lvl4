@@ -13,7 +13,6 @@ class TaskControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $nonOwnerUser;
     protected $user;
     protected $task;
     protected $taskStatus;
@@ -21,11 +20,13 @@ class TaskControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->user = factory(User::class)->create();
         $this->taskStatus = factory(TaskStatus::class)->create();
-        $this->tasks = factory(Task::class, 2)->create(
-            ['created_by_id' => $this->user, 'status_id' => $this->taskStatus]
-        );
+        $this->tasks = factory(Task::class, 2)->create();
+
+        $this->taskStatus->tasks()->saveMany($this->tasks);
+        $this->user->createdTasks()->saveMany($this->tasks);
     }
 
     public function testIndex()
