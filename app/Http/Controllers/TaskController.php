@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TaskPersistenceService;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Support\Facades\Gate;
@@ -58,12 +59,13 @@ class TaskController extends Controller
         $data = $this->validate($request, [
             'name' => 'required',
             'description' => 'string|nullable',
-            'status_id' => 'required',
+            'status_id' => 'required|numeric',
             'assigned_to_id' => 'integer|nullable',
+            'label_ids' => 'array|nullable',
         ]);
 
-        $task = $request->user()->createdTasks()->create($data);
-        $task->labels()->sync($request->label_ids ?? []);
+
+        TaskPersistenceService::create($request->user(), $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
@@ -90,10 +92,10 @@ class TaskController extends Controller
             'description' => 'string|nullable',
             'status_id' => 'required',
             'assigned_to_id' => 'integer|nullable',
+            'label_ids' => 'array|nullable'
         ]);
 
-        $task->update($data);
-        $task->labels()->sync($request->label_ids ?? []);
+        TaskPersistenceService::save($task, $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
