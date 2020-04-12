@@ -7,14 +7,30 @@
             <form method="GET" action="{{ route('tasks.index') }}" accept-charset="UTF-8" class="form-inline">
                 <select class="form-control mr-2" name="filter[status_id]">
                     <option selected="selected" value="">{{ __('view.task.index.status') }}</option>
+                    @foreach($taskStatuses as $taskStatus)
+                        <option {{ optional($filter)['status_id'] == $taskStatus->id ? 'selected' : '' }} value="{{ $taskStatus->id }}">{{ $taskStatus->name }}</option>
+                    @endforeach
+                </select>
+                <select class="form-control mr-2" name="filter[labels.id]">
+                    <option selected="selected" value="">{{ __('view.task.index.label') }}</option>
+                    @foreach($labels as $label)
+                        <option {{ optional($filter)['labels.id'] == $label->id ? 'selected' : '' }} value="{{ $label->id }}">{{ $label->name }}</option>
+                    @endforeach
                 </select>
                 <select class="form-control mr-2" name="filter[created_by_id]">
-                    <option selected="selected" value="">{{ __('view.task.index.author') }}</option>
+                    <option value="">{{ __('view.task.index.author') }}</option>
+                    @foreach($users as $user)
+                        <option {{ optional($filter)['cretated_by_id'] == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
                 </select>
                 <select class="form-control mr-2" name="filter[assigned_to_id]">
-                    <option selected="selected" value="">{{ __('view.task.index.assignee') }}</option>
+                    <option value="">{{ __('view.task.index.assignee') }}</option>
+                    @foreach($users as $user)
+                        <option {{ optional($filter)['assigned_to_id'] == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
                 </select>
                 <input class="btn btn-outline-primary mr-2" type="submit" value="{{ __('view.task.index.apply') }}">
+                <a href="{{ route('tasks.index') }}" class="btn btn-outline-danger mr-2">{{ __('view.task.index.reset') }}</a>
             </form>
         </div>
         @auth
@@ -26,7 +42,7 @@
             <tr>
                 <th>{{ __('view.task.index.id') }}</th>
                 <th>{{ __('view.task.index.status') }}</th>
-                <th>{{ __('view.task.index.labels') }}</th>
+                <th width="15%">{{ __('view.task.index.labels') }}</th>
                 <th>{{ __('view.task.index.name') }}</th>
                 <th>{{ __('view.task.index.author') }}</th>
                 <th>{{ __('view.task.index.assignee') }}</th>
@@ -40,8 +56,8 @@
             @foreach($tasks as $task)
                 <tr>
                     <td>{{$task->id}}</td>
-                    <td>{{$task->status->name}}</td>
-                    <td>
+                    <td>{{optional($task->status)->name}}</td>
+                    <td width="15%">
                         @if($task->labels)
                             @foreach($task->labels as $label)
                                 <span class="badge badge-secondary">{{ $label->name }}</span>
@@ -51,7 +67,7 @@
                         @endif
                     </td>
                     <td><a href="{{ route('tasks.show', $task) }}">{{$task->name}}</a></td>
-                    <td>{{$task->author->name}}</td>
+                    <td>{{optional($task->author)->name}}</td>
                     <td>{{optional($task->assignee)->name ?? '-'}}</td>
                     <td>{{App\Helpers\DateHelper::format($task->created_at)}}</td>
                     @auth

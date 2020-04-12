@@ -9,6 +9,7 @@ return [
             'author' => 'Author',
             'assignee' => 'Assignee',
             'apply' => 'Apply',
+            'reset' => 'Reset',
             'name' => 'Name',
             'created_at' => 'Created At',
             'add_new' => 'Add New',
@@ -17,6 +18,7 @@ return [
             'remove' => 'Remove',
             'edit' => 'Edit',
             'labels' => 'Labels',
+            'label' => 'Label',
         ],
         'show' => [
             'name' => 'Name',
