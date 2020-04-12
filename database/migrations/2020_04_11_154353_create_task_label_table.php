@@ -18,6 +18,9 @@ class CreateTaskLabelTable extends Migration
             $table->bigInteger('task_id')->nullable(false);
             $table->bigInteger('label_id')->nullable(false);
             $table->timestamps();
+
+            $table->foreign('task_id')->references('id')->on('tasks');
+            $table->foreign('label_id')->references('id')->on('labels');
         });
     }
 

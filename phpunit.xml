@@ -25,5 +25,6 @@
         <env name="DB_CONNECTION" value="testing" force="true"/>
         <env name="DB_DATABASE" value=":memory:" force="true"/>
         <server name="SESSION_DRIVER" value="array"/>
+        <server name="DB_FOREIGN_KEYS" value="true"/>
     </php>
 </phpunit>
