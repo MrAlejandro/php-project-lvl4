@@ -1,11 +1,31 @@
 start:
-	docker-compose up
+	heroku local -f Procfile.dev
 
-bash:
-	docker-compose run app bash
+setup:
+	composer install
+	cp -n .env.example .env
+	php artisan key:gen --ansi
+	touch database/database.sqlite || true
+	php artisan migrate
+	npm install
+
+serve:
+	php artisan serve
+
+watch:
+	npm run watch
+
+migrate:
+	php artisan migrate
+
+console:
+	php artisan tinker
+
+log:
+	tail -f storage/logs/laravel.log
 
 test:
-	composer phpunit
+	php artisan test
 
 deploy:
 	git push heroku
@@ -15,3 +35,6 @@ lint:
 
 lint-fix:
 	composer phpcbf
+
+bash:
+	docker-compose run app bash
