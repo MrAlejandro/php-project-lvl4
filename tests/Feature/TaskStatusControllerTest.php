@@ -24,13 +24,13 @@ class TaskStatusControllerTest extends TestCase
     {
         factory(TaskStatus::class, 2)->create();
         $response = $this->get(route('task_statuses.index'));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testCreate()
     {
         $response = $this->actingAs($this->user)->get(route('task_statuses.create'));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testStore()
@@ -39,7 +39,7 @@ class TaskStatusControllerTest extends TestCase
         $data = \Arr::only($taskStatusData, ['name']);
         $response = $this->actingAs($this->user)->post(route('task_statuses.store'), $data);
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('task_statuses', $data);
     }
@@ -48,7 +48,7 @@ class TaskStatusControllerTest extends TestCase
     {
         $taskStatus = factory(TaskStatus::class)->create();
         $response = $this->actingAs($this->user)->get(route('task_statuses.edit', $taskStatus));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testUpdate()
@@ -58,7 +58,7 @@ class TaskStatusControllerTest extends TestCase
         $data = \Arr::only($taskStatusData, ['name']);
         $response = $this->actingAs($this->user)->patch(route('task_statuses.update', $taskStatus), $data);
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('task_statuses', $data);
     }
@@ -68,7 +68,7 @@ class TaskStatusControllerTest extends TestCase
         $taskStatus = factory(TaskStatus::class)->create();
         $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $taskStatus));
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseMissing('task_statuses', ['id' => $taskStatus->id]);
     }
@@ -77,7 +77,7 @@ class TaskStatusControllerTest extends TestCase
     {
         $task = factory(Task::class)->create();
         $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $task->status));
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('task_statuses', ['id' => $task->status->id]);
     }

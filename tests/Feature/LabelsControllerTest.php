@@ -24,13 +24,13 @@ class LabelsControllerTest extends TestCase
     {
         factory(Label::class, 2)->create();
         $response = $this->get(route('labels.index'));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testCreate()
     {
         $response = $this->actingAs($this->user)->get(route('labels.create'));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testStore()
@@ -39,7 +39,7 @@ class LabelsControllerTest extends TestCase
         $labelAttrs = \Arr::only($labelData, ['name']);
         $response = $this->actingAs($this->user)->post(route('labels.store'), $labelAttrs);
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('labels', $labelAttrs);
     }
@@ -48,7 +48,7 @@ class LabelsControllerTest extends TestCase
     {
         $label = factory(Label::class)->create();
         $response = $this->actingAs($this->user)->get(route('labels.edit', $label));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testUpdate()
@@ -58,7 +58,7 @@ class LabelsControllerTest extends TestCase
         $data = \Arr::only($labelData, ['name']);
         $response = $this->actingAs($this->user)->patch(route('labels.update', $label), $data);
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('labels', $data);
     }
@@ -68,7 +68,7 @@ class LabelsControllerTest extends TestCase
         $label = factory(Label::class)->create();
         $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseMissing('labels', ['id' => $label->id]);
     }
@@ -79,7 +79,7 @@ class LabelsControllerTest extends TestCase
         $task = factory(Task::class)->create();
         $task->labels()->save($label);
         $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('labels', ['id' => $label->id]);
     }

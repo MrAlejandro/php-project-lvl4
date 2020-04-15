@@ -32,84 +32,78 @@ class TaskControllerTest extends TestCase
     public function testIndex()
     {
         $response = $this->get(route('tasks.index'));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testCreate()
     {
         $response = $this->actingAs($this->user)->get(route('tasks.create'));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testCreateFailsForNonAuthenticatedUser()
     {
         $response = $this->get(route('tasks.create'));
-        $response->assertStatus(403);
+        $response->assertForbidden();
     }
 
     public function testStore()
     {
+        $label = factory(Label::class)->create();
         $taskData = factory(Task::class)->make()->toArray();
-        $taskStatus = factory(TaskStatus::class)->create();
-        $labels = factory(Label::class, 2)->create();
-        $assignee = factory(User::class)->create();
-        $taskAttrs = collect($taskData)->only(['name', 'description'])
-                                  ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id]);
+        $taskAttrs = \Arr::only($taskData, ['name', 'description', 'assigned_to_id', 'status_id']);
 
-        $params = $taskAttrs->merge(['label_ids' => $labels->pluck('id')])->toArray();
+        $params = \Arr::add($taskAttrs, 'label_ids', [$label->id]);
 
         $response = $this->actingAs($this->user)->post(route('tasks.store'), $params);
-        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
 
         $taskAttrs['created_by_id'] = $this->user->id;
 
-        $this->assertDatabaseHas('tasks', $taskAttrs->toArray());
-        $this->assertDatabaseHas('task_label', ['label_id' => $labels->first()->id]);
-        $this->assertDatabaseHas('task_label', ['label_id' => $labels->last()->id]);
+        $this->assertDatabaseHas('tasks', $taskAttrs);
+        $this->assertDatabaseHas('task_label', ['label_id' => $label->id]);
     }
 
     public function testStoreFailsForNonAuthenticatedUser()
     {
         $response = $this->post(route('tasks.store'), []);
-        $response->assertStatus(403);
+        $response->assertForbidden();
     }
 
     public function testShow()
     {
         $response = $this->get(route('tasks.show', $this->tasks->first()));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testEdit()
     {
         $response = $this->actingAs($this->user)->get(route('tasks.edit', $this->tasks->first()));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testUpdate()
     {
+        $label = factory(Label::class)->create();
         $taskData = factory(Task::class)->make()->toArray();
-        $taskStatus = factory(TaskStatus::class)->create();
-        $labels = factory(Label::class, 2)->create();
-        $assignee = factory(User::class)->create();
-        $taskAttrs = collect($taskData)->only(['name', 'description'])
-                                  ->merge(['assigned_to_id' => $assignee->id, 'status_id' => $taskStatus->id]);
+        $taskAttrs = \Arr::only($taskData, ['name', 'description', 'assigned_to_id', 'status_id']);
 
-        $params = $taskAttrs->merge(['label_ids' => $labels->pluck('id')])->toArray();
+        $params = \Arr::add($taskAttrs, 'label_ids', [$label->id]);
         $task = $this->tasks->first();
 
         $response = $this->actingAs($this->user)->patch(route('tasks.update', $task->id), $params);
-        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
 
-        $this->assertDatabaseHas('tasks', $taskAttrs->toArray());
-        $this->assertDatabaseHas('task_label', ['task_id' => $task->id, 'label_id' => $labels->first()->id]);
-        $this->assertDatabaseHas('task_label', ['task_id' => $task->id, 'label_id' => $labels->last()->id]);
+        $this->assertDatabaseHas('tasks', $taskAttrs);
+        $this->assertDatabaseHas('task_label', ['label_id' => $label->id]);
     }
 
     public function testUpdateFailsForNotAuthenticatedUser()
     {
         $response = $this->patch(route('tasks.update', $this->tasks->first()), []);
-        $response->assertStatus(403);
+        $response->assertForbidden();
     }
 
 
@@ -118,7 +112,7 @@ class TaskControllerTest extends TestCase
         $task = $this->tasks->first();
         $response = $this->actingAs($this->user)->delete(route('tasks.destroy', $task));
         $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
@@ -128,7 +122,7 @@ class TaskControllerTest extends TestCase
         $task = $this->tasks->first();
         $user = factory(User::class)->create();
         $response = $this->actingAs($user)->delete(route('tasks.destroy', $task));
-        $response->assertStatus(403);
+        $response->assertForbidden();
 
         $this->assertDatabaseHas('tasks', ['id' => $task->id]);
     }
