@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Label;
 
-class LabelsController extends Controller
+class LabelController extends Controller
 {
     public function index()
     {
