@@ -5,34 +5,14 @@
     {{ $tasks->withQueryString()->links() }}
     <div class="d-flex">
         <div>
-            <form method="GET" action="{{ route('tasks.index') }}" accept-charset="UTF-8" class="form-inline">
-                <select class="form-control mr-2" name="filter[status_id]">
-                    <option selected="selected" value="">{{ __('view.task.index.status') }}</option>
-                    @foreach($taskStatuses as $taskStatus)
-                        <option {{ optional($filter)['status_id'] == $taskStatus->id ? 'selected' : '' }} value="{{ $taskStatus->id }}">{{ $taskStatus->name }}</option>
-                    @endforeach
-                </select>
-                <select class="form-control mr-2" name="filter[labels.id]">
-                    <option selected="selected" value="">{{ __('view.task.index.label') }}</option>
-                    @foreach($labels as $label)
-                        <option {{ optional($filter)['labels.id'] == $label->id ? 'selected' : '' }} value="{{ $label->id }}">{{ $label->name }}</option>
-                    @endforeach
-                </select>
-                <select class="form-control mr-2" name="filter[created_by_id]">
-                    <option value="">{{ __('view.task.index.author') }}</option>
-                    @foreach($users as $user)
-                        <option {{ optional($filter)['created_by_id'] == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-                <select class="form-control mr-2" name="filter[assigned_to_id]">
-                    <option value="">{{ __('view.task.index.assignee') }}</option>
-                    @foreach($users as $user)
-                        <option {{ optional($filter)['assigned_to_id'] == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-                <input class="btn btn-outline-primary mr-2" type="submit" value="{{ __('view.task.index.apply') }}">
+            {{ Form::open(['route' => 'tasks.index', 'class' => 'form-inline', 'method' => 'GET']) }}
+                {{ Form::select('filter[status_id]', $taskStatuses->pluck('name', 'id')->prepend(__('view.task.index.status'), ''), optional($filter)['status_id'], ['class' => 'form-control mr-2']) }}
+                {{ Form::select('filter[labels.id]', $labels->pluck('name', 'id')->prepend(__('view.task.index.label'), ''), optional($filter)['labels.id'], ['class' => 'form-control mr-2']) }}
+                {{ Form::select('filter[created_by_id]', $users->pluck('name', 'id')->prepend(__('view.task.index.author'), ''), optional($filter)['created_by_id'], ['class' => 'form-control mr-2']) }}
+                {{ Form::select('filter[assigned_to_id]', $users->pluck('name', 'id')->prepend(__('view.task.index.assignee'), ''), optional($filter)['assigned_to_id'], ['class' => 'form-control mr-2']) }}
+                {{ Form::submit(__('view.task.index.apply'), ['class' => 'btn btn-outline-primary mr-2']) }}
                 <a href="{{ route('tasks.index') }}" class="btn btn-outline-danger mr-2">{{ __('view.task.index.reset') }}</a>
-            </form>
+            {{ Form::close() }}
         </div>
         @auth
         <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">{{ __('view.task.index.add_new') }}</a>
