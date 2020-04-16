@@ -1,48 +1,26 @@
 @include('shared.errors')
 
 <div class="form-group">
-    <label for="name">{{ __('view.task.form.name') }}</label>
-    <input class="form-control" name="name" type="text" value="{{ $task->name }}" id="name">
-    @if($errors->has('name'))
-        <div class="error">{{ $errors->first('name') }}</div>
-    @endif
+    {{ Form::label('name', __('view.task.form.name')) }}
+    {{ Form::text('name', $task->name, ['class' => 'form-control']) }}
 </div>
 
 <div class="form-group">
-    <label for="description">{{ __('view.task.form.description') }}</label>
-    <textarea class="form-control" name="description" cols="50" rows="10" id="description">{{ $task->description }}</textarea>
+    {{ Form::label('description', __('view.task.form.description')) }}
+    {{ Form::textarea('description', $task->description, ['class' => 'form-control']) }}
 </div>
 
 <div class="form-group">
-    <label for="status_id">{{ __('view.task.form.status') }}</label>
-    <select class="form-control" id="status_id" name="status_id">
-        <option value="">{{ __('view.task.form.status') }}</option>
-        @foreach($taskStatuses as $taskStatus)
-            <option value="{{ $taskStatus->id }}" {{ ($taskStatus->id == optional($task->status)->id) ? "selected" : "" }}>{{ $taskStatus->name }}</option>
-        @endforeach
-    </select>
+    {{ Form::label('status_id', __('view.task.form.status')) }}
+    {{ Form::select('status_id', $taskStatuses->pluck('name', 'id')->prepend(__('view.task.form.status'), ''), optional($task->status)->id, ['class' => 'form-control']) }}
 </div>
 
 <div class="form-group">
-    <label for="label_ids">{{ __('view.task.form.labels') }}</label>
-    <select class="form-control" id="label_ids" name="label_ids[]" multiple>
-        @foreach($labels as $label)
-            <option
-                value="{{ $label->id }}"
-                {{ ($task->labels && in_array($label->id, $task->labels->pluck('id')->toArray())) ? "selected" : "" }}
-            >{{ $label->name }}</option>
-        @endforeach
-    </select>
+    {{ Form::label('label_ids[]', __('view.task.form.labels')) }}
+    {{ Form::select('label_ids[]', $labels->pluck('name', 'id'), optional($task->labels)->pluck('id'), ['class' => 'form-control', 'multiple' => true]) }}
 </div>
 
 <div class="form-group">
-    <label for="assigned_to_id">{{ __('view.task.form.assignee') }}</label>
-    <select class="form-control" id="assigned_to_id" name="assigned_to_id">
-        <option value="">{{ __('view.task.form.assignee') }}</option>
-        @foreach($users as $user)
-            <option value="{{ $user->id }}" {{ ($user->id == optional($task->assignee)->id) ? "selected" : "" }}>{{ $user->name }}</option>
-        @endforeach
-    </select>
+    {{ Form::label('assigned_to_id', __('view.task.form.assignee')) }}
+    {{ Form::select('assigned_to_id', $users->pluck('name', 'id')->prepend(__('view.task.form.assignee'), ''), optional($task->assignee)->id, ['class' => 'form-control']) }}
 </div>
-
-

@@ -5,14 +5,13 @@
 
     @include('shared.errors')
 
-    <form method="POST" action="{{ route('labels.store') }}" accept-charset="UTF-8" class="w-50">
-        @csrf
+    {{ Form::model($label, ['url' => route('labels.store'), 'method' => 'POST', 'class' => 'w-50']) }}
 
         <div class="form-group">
-            <label for="name">{{ __('view.label.create.name') }}</label>
-            <input class="form-control" name="name" type="text" id="name">
+            {{ Form::label('name', __('view.label.create.name')) }}
+            {{ Form::text('name', $label->name, ['class' => 'form-control']) }}
         </div>
 
-        <input class="btn btn-primary" type="submit" value="{{ __('view.label.create.create') }}">
-    </form>
+        {{ Form::submit(__('view.label.create.create'), ['class' => 'btn btn-primary']) }}
+    {{ Form::close() }}
 @endsection

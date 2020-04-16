@@ -5,15 +5,13 @@
 
     @include('shared.errors')
 
-    <form method="POST" action="{{ route('labels.update', $label) }}" accept-charset="UTF-8" class="w-50">
-        <input type="hidden" name="_method" value="PUT"/>
-        @csrf
+    {{ Form::model($label, ['url' => route('labels.update', $label), 'method' => 'PUT', 'class' => 'w-50']) }}
 
         <div class="form-group">
-            <label for="name">{{ __('view.label.edit.name') }}</label>
-            <input class="form-control" name="name" type="text" id="name" value="{{ $label->name }}">
+            {{ Form::label('name', __('view.label.edit.name')) }}
+            {{ Form::text('name', $label->name, ['class' => 'form-control']) }}
         </div>
 
-        <input class="btn btn-primary" type="submit" value="{{ __('view.label.edit.update') }}">
-    </form>
+        {{ Form::submit(__('view.label.edit.update'), ['class' => 'btn btn-primary']) }}
+    {{ Form::close() }}
 @endsection
