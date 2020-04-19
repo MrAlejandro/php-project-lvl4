@@ -41,12 +41,6 @@ class TaskControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function testCreateFailsForNonAuthenticatedUser()
-    {
-        $response = $this->get(route('tasks.create'));
-        $response->assertForbidden();
-    }
-
     public function testStore()
     {
         $label = factory(Label::class)->create();
@@ -63,12 +57,6 @@ class TaskControllerTest extends TestCase
 
         $this->assertDatabaseHas('tasks', $taskAttrs);
         $this->assertDatabaseHas('task_label', ['label_id' => $label->id]);
-    }
-
-    public function testStoreFailsForNonAuthenticatedUser()
-    {
-        $response = $this->post(route('tasks.store'), []);
-        $response->assertForbidden();
     }
 
     public function testShow()
@@ -100,13 +88,6 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseHas('task_label', ['label_id' => $label->id]);
     }
 
-    public function testUpdateFailsForNotAuthenticatedUser()
-    {
-        $response = $this->patch(route('tasks.update', $this->tasks->first()), []);
-        $response->assertForbidden();
-    }
-
-
     public function testDestroy()
     {
         $task = $this->tasks->first();
@@ -117,6 +98,18 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
 
+    public function testCreateFailsForNonAuthenticatedUser()
+    {
+        $response = $this->get(route('tasks.create'));
+        $response->assertForbidden();
+    }
+
+    public function testStoreFailsForNonAuthenticatedUser()
+    {
+        $response = $this->post(route('tasks.store'), []);
+        $response->assertForbidden();
+    }
+
     public function testDestroyFailsDeletingNotOwnedTask()
     {
         $task = $this->tasks->first();
@@ -125,5 +118,11 @@ class TaskControllerTest extends TestCase
         $response->assertForbidden();
 
         $this->assertDatabaseHas('tasks', ['id' => $task->id]);
+    }
+
+    public function testUpdateFailsForNotAuthenticatedUser()
+    {
+        $response = $this->patch(route('tasks.update', $this->tasks->first()), []);
+        $response->assertForbidden();
     }
 }
