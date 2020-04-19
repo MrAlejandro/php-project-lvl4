@@ -89,7 +89,7 @@ class TaskController extends Controller
             'label_ids' => 'array|nullable'
         ]);
 
-        TaskPersistenceService::save($task, $data);
+        TaskPersistenceService::update($task, $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');

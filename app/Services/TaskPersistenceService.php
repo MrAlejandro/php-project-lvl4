@@ -8,7 +8,7 @@ use App\User;
 
 class TaskPersistenceService
 {
-    public static function save(Task $task, array $validatedData)
+    public static function update(Task $task, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
