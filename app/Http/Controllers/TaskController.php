@@ -40,7 +40,7 @@ class TaskController extends Controller
 
     public function create()
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('create', Task::class);
 
         $task = new Task();
         [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
@@ -50,7 +50,7 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('store', Task::class);
 
         $data = $this->validate($request, [
             'name' => 'required',
@@ -69,7 +69,7 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('edit', $task);
 
         $task->load(['assignee', 'status', 'labels']);
         [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
@@ -79,7 +79,7 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('update', $task);
 
         $data = $this->validate($request, [
             'name' => 'required',

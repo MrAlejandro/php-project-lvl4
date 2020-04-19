@@ -16,7 +16,7 @@ class TaskStatusController extends Controller
 
     public function create()
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('create', TaskStatus::class);
 
         $taskStatus = new TaskStatus();
         return view('task_status.create', compact('taskStatus'));
@@ -24,7 +24,7 @@ class TaskStatusController extends Controller
 
     public function store(Request $request)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('store', TaskStatus::class);
 
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses',
@@ -38,14 +38,14 @@ class TaskStatusController extends Controller
 
     public function edit(TaskStatus $taskStatus)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('edit', TaskStatus::class);
 
         return view('task_status.edit', compact('taskStatus'));
     }
 
     public function update(Request $request, TaskStatus $taskStatus)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('update', TaskStatus::class);
 
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses,name,' . $taskStatus->id,

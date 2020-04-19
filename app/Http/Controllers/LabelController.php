@@ -16,7 +16,7 @@ class LabelController extends Controller
 
     public function create()
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('create', Label::class);
 
         $label = new Label();
         return view('label.create', compact('label'));
@@ -24,7 +24,7 @@ class LabelController extends Controller
 
     public function store(Request $request)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('store', Label::class);
 
         $data = $this->validate($request, [
             'name' => 'required|unique:labels',
@@ -38,14 +38,14 @@ class LabelController extends Controller
 
     public function edit(Label $label)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('store', $label);
 
         return view('label.edit', compact('label'));
     }
 
     public function update(Request $request, Label $label)
     {
-        Gate::authorize('authenticated-user');
+        $this->authorize('update', $label);
 
         $data = $this->validate($request, [
             'name' => 'required|unique:labels,name,' . $label->id,

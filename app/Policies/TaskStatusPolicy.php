@@ -6,13 +6,33 @@ use App\User;
 use App\TaskStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TaskStatusPolicy
+class TaskStatusPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
+    public function create(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
+    public function store(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
+    public function edit(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
+    public function update(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
     public function destroy(?User $user, TaskStatus $taskStatus)
     {
-        if (empty($user)) {
+        if (!$this->isAuthenticatedUser($user)) {
             return $this->deny(__('policy.task_status.destroy.not_authenticated'));
         }
 

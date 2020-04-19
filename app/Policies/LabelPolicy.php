@@ -6,13 +6,33 @@ use App\User;
 use App\Label;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class LabelPolicy
+class LabelPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
+    public function create(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
+    public function store(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
+    public function edit(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
+    public function update(?User $user)
+    {
+        return $this->isAuthenticatedUser($user);
+    }
+
     public function destroy(?User $user, Label $label)
     {
-        if (empty($user)) {
+        if (!$this->isAuthenticatedUser($user)) {
             return $this->deny(__('policy.label.destroy.not_authenticated'));
         }
 
