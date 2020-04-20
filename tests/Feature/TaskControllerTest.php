@@ -97,32 +97,4 @@ class TaskControllerTest extends TestCase
 
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
-
-    public function testCreateFailsForNonAuthenticatedUser()
-    {
-        $response = $this->get(route('tasks.create'));
-        $response->assertForbidden();
-    }
-
-    public function testStoreFailsForNonAuthenticatedUser()
-    {
-        $response = $this->post(route('tasks.store'), []);
-        $response->assertForbidden();
-    }
-
-    public function testDestroyFailsDeletingNotOwnedTask()
-    {
-        $task = $this->tasks->first();
-        $user = factory(User::class)->create();
-        $response = $this->actingAs($user)->delete(route('tasks.destroy', $task));
-        $response->assertForbidden();
-
-        $this->assertDatabaseHas('tasks', ['id' => $task->id]);
-    }
-
-    public function testUpdateFailsForNotAuthenticatedUser()
-    {
-        $response = $this->patch(route('tasks.update', $this->tasks->first()), []);
-        $response->assertForbidden();
-    }
 }

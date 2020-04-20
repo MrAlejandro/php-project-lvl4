@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Label;
-use App\Task;
 use App\User;
 
 class LabelsControllerTest extends TestCase
@@ -71,16 +70,5 @@ class LabelsControllerTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseMissing('labels', ['id' => $label->id]);
-    }
-
-    public function testDestroyFailsDeletingLabelAssociatedWithTask()
-    {
-        $label = factory(Label::class)->create();
-        $task = factory(Task::class)->create();
-        $task->labels()->save($label);
-        $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
-        $response->assertRedirect();
-
-        $this->assertDatabaseHas('labels', ['id' => $label->id]);
     }
 }
