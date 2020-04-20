@@ -53,7 +53,7 @@ class TaskController extends Controller
         $this->authorize('store', Task::class);
 
         $data = $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|unique:tasks',
             'description' => 'string|nullable',
             'status_id' => 'required|numeric',
             'assigned_to_id' => 'integer|nullable',
@@ -82,7 +82,7 @@ class TaskController extends Controller
         $this->authorize('update', $task);
 
         $data = $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|unique:tasks,name,' . $task->id,
             'description' => 'string|nullable',
             'status_id' => 'required',
             'assigned_to_id' => 'integer|nullable',
