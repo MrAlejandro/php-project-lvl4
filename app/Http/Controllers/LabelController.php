@@ -59,14 +59,9 @@ class LabelController extends Controller
 
     public function destroy(Label $label)
     {
-        $response = Gate::inspect('destroy', $label);
+        $this->authorize('destroy', $label);
 
-        if ($response->allowed()) {
-            $label->delete();
-            flash(__('flash.label.delete.success'))->success();
-        } else {
-            flash($response->message())->error();
-        }
+        $label->delete();
 
         return redirect()->route('labels.index');
     }

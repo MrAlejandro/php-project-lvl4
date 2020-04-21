@@ -59,14 +59,9 @@ class TaskStatusController extends Controller
 
     public function destroy(TaskStatus $taskStatus)
     {
-        $response = Gate::inspect('destroy', $taskStatus);
+        $this->authorize('destroy', $taskStatus);
 
-        if ($response->allowed()) {
-            $taskStatus->delete();
-            flash(__('flash.task_status.delete.success'))->success();
-        } else {
-            flash($response->message())->error();
-        }
+        $taskStatus->delete();
 
         return redirect()->route('task_statuses.index');
     }
