@@ -8,7 +8,7 @@ use App\User;
 
 class TaskPersistenceService
 {
-    public static function update(Task $task, array $validatedData)
+    public static function updateWithAssociations(Task $task, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
@@ -16,16 +16,22 @@ class TaskPersistenceService
             $task->update($taskAttrs);
             $task->labels()->sync($labelIds);
         });
+
+        return $task;
     }
 
-    public static function create(User $user, array $validatedData)
+    public static function createWithAssociations(User $user, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
-        DB::transaction(function () use ($user, $taskAttrs, $labelIds) {
+        $task = DB::transaction(function () use ($user, $taskAttrs, $labelIds) {
             $task = $user->createdTasks()->create($taskAttrs);
             $task->labels()->sync($labelIds);
+
+            return $task;
         });
+
+        return $task;
     }
 
     protected static function prepareTaskData(array $validatedData)

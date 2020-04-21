@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\TaskPersistenceService;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\User;
 use App\Task;
@@ -61,7 +60,7 @@ class TaskController extends Controller
         ]);
 
 
-        TaskPersistenceService::create($request->user(), $data);
+        TaskPersistenceService::createWithAssociations($request->user(), $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
@@ -89,7 +88,7 @@ class TaskController extends Controller
             'label_ids' => 'array|nullable'
         ]);
 
-        TaskPersistenceService::update($task, $data);
+        TaskPersistenceService::updateWithAssociations($task, $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
