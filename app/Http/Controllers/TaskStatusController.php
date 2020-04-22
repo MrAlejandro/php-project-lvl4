@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\TaskStatus;
 
@@ -16,9 +15,9 @@ class TaskStatusController extends Controller
 
     public function create()
     {
-        $this->authorize('create', TaskStatus::class);
-
         $taskStatus = new TaskStatus();
+        $this->authorize('create', $taskStatus);
+
         return view('task_status.create', compact('taskStatus'));
     }
 
@@ -38,14 +37,14 @@ class TaskStatusController extends Controller
 
     public function edit(TaskStatus $taskStatus)
     {
-        $this->authorize('edit', TaskStatus::class);
+        $this->authorize('edit', $taskStatus);
 
         return view('task_status.edit', compact('taskStatus'));
     }
 
     public function update(Request $request, TaskStatus $taskStatus)
     {
-        $this->authorize('update', TaskStatus::class);
+        $this->authorize('update', $taskStatus);
 
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses,name,' . $taskStatus->id,

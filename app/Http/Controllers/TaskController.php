@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\TaskPersistenceService;
+use App\Services\TaskService;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Http\Request;
@@ -15,7 +15,9 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
+        $users = User::all();
+        $labels = Label::all();
+        $taskStatuses = TaskStatus::all();
 
         $tasks = QueryBuilder::for(Task::class)
             ->with(['status', 'labels', 'assignee'])
@@ -39,10 +41,12 @@ class TaskController extends Controller
 
     public function create()
     {
-        $this->authorize('create', Task::class);
-
         $task = new Task();
-        [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
+        $this->authorize('create', $task);
+
+        $users = User::all();
+        $labels = Label::all();
+        $taskStatuses = TaskStatus::all();
 
         return view('task.create', compact('task', 'users', 'labels', 'taskStatuses'));
     }
@@ -60,7 +64,7 @@ class TaskController extends Controller
         ]);
 
 
-        TaskPersistenceService::createWithAssociations($request->user(), $data);
+        TaskService::create($request->user(), $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
@@ -71,7 +75,9 @@ class TaskController extends Controller
         $this->authorize('edit', $task);
 
         $task->load(['assignee', 'status', 'labels']);
-        [$users, $labels, $taskStatuses] = [User::all(), Label::all(), TaskStatus::all()];
+        $users = User::all();
+        $labels = Label::all();
+        $taskStatuses = TaskStatus::all();
 
         return view('task.edit', compact('task', 'users', 'labels', 'taskStatuses'));
     }
@@ -88,7 +94,7 @@ class TaskController extends Controller
             'label_ids' => 'array|nullable'
         ]);
 
-        TaskPersistenceService::updateWithAssociations($task, $data);
+        TaskService::update($task, $data);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');

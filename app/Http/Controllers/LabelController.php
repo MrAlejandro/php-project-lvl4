@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Label;
 
@@ -16,9 +15,9 @@ class LabelController extends Controller
 
     public function create()
     {
-        $this->authorize('create', Label::class);
-
         $label = new Label();
+        $this->authorize('create', $label);
+
         return view('label.create', compact('label'));
     }
 

@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 use App\Task;
 use App\User;
 
-class TaskPersistenceService
+class TaskService
 {
-    public static function updateWithAssociations(Task $task, array $validatedData)
+    public static function update(Task $task, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
@@ -20,7 +20,7 @@ class TaskPersistenceService
         return $task;
     }
 
-    public static function createWithAssociations(User $user, array $validatedData)
+    public static function create(User $user, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
