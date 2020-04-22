@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\TaskStatusRequest;
 use App\TaskStatus;
 
 class TaskStatusController extends Controller
@@ -21,15 +21,12 @@ class TaskStatusController extends Controller
         return view('task_status.create', compact('taskStatus'));
     }
 
-    public function store(Request $request)
+    public function store(TaskStatusRequest $request)
     {
         $this->authorize('store', TaskStatus::class);
+        $validatedData = $request->validated();
 
-        $data = $this->validate($request, [
-            'name' => 'required|unique:task_statuses',
-        ]);
-
-        TaskStatus::create($data);
+        TaskStatus::create($validatedData);
         flash(__('flash.task_status.store.success'))->success();
 
         return redirect()->route('task_statuses.index');
@@ -42,15 +39,12 @@ class TaskStatusController extends Controller
         return view('task_status.edit', compact('taskStatus'));
     }
 
-    public function update(Request $request, TaskStatus $taskStatus)
+    public function update(TaskStatusRequest $request, TaskStatus $taskStatus)
     {
         $this->authorize('update', $taskStatus);
+        $validatedData = $request->validated();
 
-        $data = $this->validate($request, [
-            'name' => 'required|unique:task_statuses,name,' . $taskStatus->id,
-        ]);
-
-        $taskStatus->update($data);
+        $taskStatus->update($validatedData);
         flash(__('flash.task_status.update.success'))->success();
 
         return redirect()->route('task_statuses.index');

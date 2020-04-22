@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\LabelRequest;
 use App\Label;
 
 class LabelController extends Controller
@@ -21,15 +21,12 @@ class LabelController extends Controller
         return view('label.create', compact('label'));
     }
 
-    public function store(Request $request)
+    public function store(LabelRequest $request)
     {
         $this->authorize('store', Label::class);
+        $validatedData = $request->validated();
 
-        $data = $this->validate($request, [
-            'name' => 'required|unique:labels',
-        ]);
-
-        Label::create($data);
+        Label::create($validatedData);
         flash(__('flash.label.store.success'))->success();
 
         return redirect()->route('labels.index');
@@ -37,20 +34,17 @@ class LabelController extends Controller
 
     public function edit(Label $label)
     {
-        $this->authorize('store', $label);
+        $this->authorize('edit', $label);
 
         return view('label.edit', compact('label'));
     }
 
-    public function update(Request $request, Label $label)
+    public function update(LabelRequest $request, Label $label)
     {
         $this->authorize('update', $label);
+        $validatedData = $request->validated();
 
-        $data = $this->validate($request, [
-            'name' => 'required|unique:labels,name,' . $label->id,
-        ]);
-
-        $label->update($data);
+        $label->update($validatedData);
         flash(__('flash.label.update.success'))->success();
 
         return redirect()->route('labels.index');

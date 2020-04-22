@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TaskService;
+use App\Http\Requests\TaskRequest;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Http\Request;
@@ -51,20 +52,12 @@ class TaskController extends Controller
         return view('task.create', compact('task', 'users', 'labels', 'taskStatuses'));
     }
 
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
         $this->authorize('store', Task::class);
+        $validatedData = $request->validated();
 
-        $data = $this->validate($request, [
-            'name' => 'required|unique:tasks',
-            'description' => 'string|nullable',
-            'status_id' => 'required|numeric',
-            'assigned_to_id' => 'integer|nullable',
-            'label_ids' => 'array|nullable',
-        ]);
-
-
-        TaskService::create($request->user(), $data);
+        TaskService::create($request->user(), $validatedData);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
@@ -82,19 +75,12 @@ class TaskController extends Controller
         return view('task.edit', compact('task', 'users', 'labels', 'taskStatuses'));
     }
 
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
         $this->authorize('update', $task);
+        $validatedData = $request->validated();
 
-        $data = $this->validate($request, [
-            'name' => 'required|unique:tasks,name,' . $task->id,
-            'description' => 'string|nullable',
-            'status_id' => 'required',
-            'assigned_to_id' => 'integer|nullable',
-            'label_ids' => 'array|nullable'
-        ]);
-
-        TaskService::update($task, $data);
+        TaskService::update($task, $validatedData);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
