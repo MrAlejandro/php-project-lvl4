@@ -54,10 +54,12 @@ class TaskController extends Controller
 
     public function store(TaskRequest $request)
     {
-        $this->authorize('store', Task::class);
+        $task = $request->user()->createdTasks()->make();
+        $this->authorize('store', $task);
+
         $validatedData = $request->validated();
 
-        TaskService::create($request->user(), $validatedData);
+        TaskService::store($task, $validatedData);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');

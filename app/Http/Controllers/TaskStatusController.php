@@ -23,10 +23,12 @@ class TaskStatusController extends Controller
 
     public function store(TaskStatusRequest $request)
     {
-        $this->authorize('store', TaskStatus::class);
-        $validatedData = $request->validated();
+        $taskStatus = TaskStatus::make();
+        $this->authorize('store', $taskStatus);
 
-        TaskStatus::create($validatedData);
+        $validatedData = $request->validated();
+        $taskStatus->fill($validatedData)->save();
+
         flash(__('flash.task_status.store.success'))->success();
 
         return redirect()->route('task_statuses.index');

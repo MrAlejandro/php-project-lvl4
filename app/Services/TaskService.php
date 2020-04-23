@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use App\Task;
-use App\User;
 
 class TaskService
 {
@@ -20,12 +19,12 @@ class TaskService
         return $task;
     }
 
-    public static function create(User $user, array $validatedData)
+    public static function store(Task $task, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
-        $task = DB::transaction(function () use ($user, $taskAttrs, $labelIds) {
-            $task = $user->createdTasks()->create($taskAttrs);
+        $task = DB::transaction(function () use ($task, $taskAttrs, $labelIds) {
+            $task->fill($taskAttrs)->save();
             $task->labels()->sync($labelIds);
 
             return $task;

@@ -23,10 +23,12 @@ class LabelController extends Controller
 
     public function store(LabelRequest $request)
     {
-        $this->authorize('store', Label::class);
-        $validatedData = $request->validated();
+        $label = Label::make();
+        $this->authorize('store', $label);
 
-        Label::create($validatedData);
+        $validatedData = $request->validated();
+        $label->fill($validatedData)->save();
+
         flash(__('flash.label.store.success'))->success();
 
         return redirect()->route('labels.index');
