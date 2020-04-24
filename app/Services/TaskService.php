@@ -19,7 +19,7 @@ class TaskService
         return $task;
     }
 
-    public static function store(Task $task, array $validatedData)
+    public static function create(Task $task, array $validatedData)
     {
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 

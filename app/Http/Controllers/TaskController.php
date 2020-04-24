@@ -59,7 +59,7 @@ class TaskController extends Controller
 
         $validatedData = $request->validated();
 
-        TaskService::store($task, $validatedData);
+        TaskService::create($task, $validatedData);
         flash(__('flash.task.update.success'))->success();
 
         return redirect()->route('tasks.index');
