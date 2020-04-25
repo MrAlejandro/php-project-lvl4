@@ -43,7 +43,7 @@ class TaskController extends Controller
     public function create()
     {
         $task = new Task();
-        $this->authorize('create', $task);
+        $this->authorize($task);
 
         $users = User::all();
         $labels = Label::all();
@@ -55,7 +55,7 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $task = $request->user()->createdTasks()->make();
-        $this->authorize('store', $task);
+        $this->authorize($task);
 
         $validatedData = $request->validated();
 
@@ -67,7 +67,7 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        $this->authorize('edit', $task);
+        $this->authorize($task);
 
         $task->load(['assignee', 'status', 'labels']);
         $users = User::all();
@@ -79,7 +79,7 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, Task $task)
     {
-        $this->authorize('update', $task);
+        $this->authorize($task);
         $validatedData = $request->validated();
 
         TaskService::update($task, $validatedData);
@@ -90,7 +90,7 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
-        $this->authorize('destroy', $task);
+        $this->authorize($task);
 
         $task->delete();
         flash(__('flash.task.delete.success'));

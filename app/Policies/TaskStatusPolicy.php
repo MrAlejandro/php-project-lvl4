@@ -30,7 +30,7 @@ class TaskStatusPolicy extends BasePolicy
         return $this->isAuthenticatedUser($user);
     }
 
-    public function destroy(?User $user, TaskStatus $taskStatus)
+    public function delete(?User $user, TaskStatus $taskStatus)
     {
         if (!$this->isAuthenticatedUser($user)) {
             return $this->deny(__('policy.task_status.destroy.not_authenticated'));

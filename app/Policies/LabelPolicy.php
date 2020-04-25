@@ -30,7 +30,7 @@ class LabelPolicy extends BasePolicy
         return $this->isAuthenticatedUser($user);
     }
 
-    public function destroy(?User $user, Label $label)
+    public function delete(?User $user, Label $label)
     {
         if (!$this->isAuthenticatedUser($user)) {
             return $this->deny(__('policy.label.destroy.not_authenticated'));

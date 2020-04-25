@@ -16,7 +16,7 @@ class LabelController extends Controller
     public function create()
     {
         $label = new Label();
-        $this->authorize('create', $label);
+        $this->authorize($label);
 
         return view('label.create', compact('label'));
     }
@@ -24,7 +24,7 @@ class LabelController extends Controller
     public function store(LabelRequest $request)
     {
         $label = Label::make();
-        $this->authorize('store', $label);
+        $this->authorize($label);
 
         $validatedData = $request->validated();
         $label->fill($validatedData)->save();
@@ -36,14 +36,14 @@ class LabelController extends Controller
 
     public function edit(Label $label)
     {
-        $this->authorize('edit', $label);
+        $this->authorize($label);
 
         return view('label.edit', compact('label'));
     }
 
     public function update(LabelRequest $request, Label $label)
     {
-        $this->authorize('update', $label);
+        $this->authorize($label);
         $validatedData = $request->validated();
 
         $label->update($validatedData);
@@ -54,7 +54,7 @@ class LabelController extends Controller
 
     public function destroy(Label $label)
     {
-        $this->authorize('destroy', $label);
+        $this->authorize($label);
 
         $label->delete();
 

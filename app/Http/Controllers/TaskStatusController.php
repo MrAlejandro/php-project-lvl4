@@ -16,7 +16,7 @@ class TaskStatusController extends Controller
     public function create()
     {
         $taskStatus = new TaskStatus();
-        $this->authorize('create', $taskStatus);
+        $this->authorize($taskStatus);
 
         return view('task_status.create', compact('taskStatus'));
     }
@@ -24,7 +24,7 @@ class TaskStatusController extends Controller
     public function store(TaskStatusRequest $request)
     {
         $taskStatus = TaskStatus::make();
-        $this->authorize('store', $taskStatus);
+        $this->authorize($taskStatus);
 
         $validatedData = $request->validated();
         $taskStatus->fill($validatedData)->save();
@@ -36,14 +36,14 @@ class TaskStatusController extends Controller
 
     public function edit(TaskStatus $taskStatus)
     {
-        $this->authorize('edit', $taskStatus);
+        $this->authorize($taskStatus);
 
         return view('task_status.edit', compact('taskStatus'));
     }
 
     public function update(TaskStatusRequest $request, TaskStatus $taskStatus)
     {
-        $this->authorize('update', $taskStatus);
+        $this->authorize($taskStatus);
         $validatedData = $request->validated();
 
         $taskStatus->update($validatedData);
@@ -54,7 +54,7 @@ class TaskStatusController extends Controller
 
     public function destroy(TaskStatus $taskStatus)
     {
-        $this->authorize('destroy', $taskStatus);
+        $this->authorize($taskStatus);
 
         $taskStatus->delete();
 

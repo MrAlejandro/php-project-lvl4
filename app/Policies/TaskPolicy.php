@@ -27,7 +27,7 @@ class TaskPolicy extends BasePolicy
         return $this->isAuthenticatedUser($user);
     }
 
-    public function destroy(?User $user, Task $task)
+    public function delete(?User $user, Task $task)
     {
         return optional($user)->id == $task->created_by_id;
     }
