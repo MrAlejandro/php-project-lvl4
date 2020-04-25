@@ -27,7 +27,8 @@ class LabelController extends Controller
         $this->authorize($label);
 
         $validatedData = $request->validated();
-        $label->fill($validatedData)->save();
+        $label->fill($validatedData);
+        $label->save();
 
         flash(__('flash.label.store.success'))->success();
 

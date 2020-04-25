@@ -27,7 +27,8 @@ class TaskStatusController extends Controller
         $this->authorize($taskStatus);
 
         $validatedData = $request->validated();
-        $taskStatus->fill($validatedData)->save();
+        $taskStatus->fill($validatedData);
+        $taskStatus->save();
 
         flash(__('flash.task_status.store.success'))->success();
 

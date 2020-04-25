@@ -24,7 +24,8 @@ class TaskService
         [$taskAttrs, $labelIds] = self::prepareTaskData($validatedData);
 
         $task = DB::transaction(function () use ($task, $taskAttrs, $labelIds) {
-            $task->fill($taskAttrs)->save();
+            $task->fill($taskAttrs);
+            $task->save();
             $task->labels()->sync($labelIds);
 
             return $task;
